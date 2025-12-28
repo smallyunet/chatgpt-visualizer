@@ -35,9 +35,21 @@ export const ChatView: React.FC<ChatViewProps> = ({ conversation }) => {
             {/* Header */}
             <header className="px-6 py-4 border-b border-gray-100 bg-white/80 backdrop-blur-sm flex justify-between items-center flex-shrink-0 z-10 sticky top-0">
                 <div className="flex flex-col gap-0.5 overflow-hidden">
-                    <h1 className="font-semibold text-gray-900 truncate text-base tracking-tight">
-                        {conversation.title}
-                    </h1>
+                    <div className="flex items-center gap-2">
+                        <h1 className="font-semibold text-gray-900 truncate text-base tracking-tight">
+                            {conversation.title}
+                        </h1>
+                        {conversation.gizmo_id && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-indigo-50 text-indigo-600 border border-indigo-100 flex-shrink-0">
+                                Custom GPT
+                            </span>
+                        )}
+                        {conversation.workspace_id && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-600 border border-emerald-100 flex-shrink-0">
+                                Workspace
+                            </span>
+                        )}
+                    </div>
                     <div className="flex items-center gap-3 text-xs text-gray-500">
                         <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />

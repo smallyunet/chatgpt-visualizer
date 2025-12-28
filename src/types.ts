@@ -44,4 +44,6 @@ export interface Conversation {
     update_time: number;
     mapping: Record<string, Node>;
     current_node?: string | null; // UUID of the current leaf node
+    gizmo_id?: string | null;
+    workspace_id?: string | null;
 }
