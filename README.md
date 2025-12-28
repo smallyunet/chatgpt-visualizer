@@ -14,7 +14,7 @@ A high-performance, privacy-first web application to visualize your ChatGPT hist
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) (v16 or higher)
+- [Node.js](https://nodejs.org/) (v18 or higher)
 - npm or yarn
 
 ## Usage Guide
@@ -84,4 +84,4 @@ The build artifacts will be in the `dist/` directory.
 
 - **Images not loading?** Ensure the image files (starting with `file-`) are in the root of `public/data/` alongside `conversations.json`.
 - **Blank screen?** Check the browser console (F12) for errors. Ensure `public/data/conversations.json` exists and is valid JSON.
-# chatgpt-visualizer
+
