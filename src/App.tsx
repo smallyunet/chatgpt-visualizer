@@ -13,7 +13,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-900 text-gray-100">
+      <div className="h-screen w-screen flex items-center justify-center bg-white text-gray-900">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
           <p>Loading conversations...</p>
@@ -24,14 +24,14 @@ function App() {
 
   if (error) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-900 text-red-500">
+      <div className="h-screen w-screen flex items-center justify-center bg-white text-red-500">
         <p>Error: {error}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gray-900">
+    <div className="flex h-screen w-screen overflow-hidden bg-white">
       <ConversationList
         conversations={conversations}
         selectedId={selectedId}
