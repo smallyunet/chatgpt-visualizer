@@ -2,13 +2,15 @@
 
 A high-performance, privacy-first web application to visualize your ChatGPT history exports. Designed with a high-density "Data Style" layout for efficient browsing of large conversation logs.
 
-![Project Screenshot](https://raw.githubusercontent.com/smallyu/chatgpt-visualizer/main/screenshot.png)
+![Project Screenshot](./screenshot-v2.png)
 
 ## Features
 
-- **High-Density Layout**: Optimized for reading large amounts of text and code with minimal wasted space.
+- **Statistics Dashboard**: Visualize your chat habits with activity trends, message counts, and bot usage breakdown.
+- **Premium UI**: Modern, glassmorphism-inspired design with refined typography (Inter & JetBrains Mono) and smooth animations.
+- **Markdown & Code**: Full support for Markdown rendering, including syntax-highlighted code blocks, math equations, and lists.
+- **High-Density Layout**: Optimized for reading large amounts of text with minimal wasted space.
 - **Privacy First**: Runs entirely locally. Your data never leaves your machine.
-- **Full Rendering**: Supports Markdown, Code Syntax Highlighting, and LaTeX Math equations.
 - **Image Attachments**: Automatically displays images included in your export.
 - **Instant Search**: Virtualized list allows instant filtering even with thousands of conversations.
 
