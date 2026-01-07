@@ -1,8 +1,9 @@
 @import "tailwindcss";
-
 /* Modern Font Stack */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@plugin "@tailwindcss/typography";
 
 html,
 body,
@@ -16,7 +17,8 @@ body {
   letter-spacing: -0.011em;
 }
 
-code, pre {
+code,
+pre {
   font-family: 'JetBrains Mono', monospace;
 }
 
