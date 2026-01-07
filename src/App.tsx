@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useChatData } from './hooks/useChatData';
 import { ConversationList } from './components/ConversationList';
 import { ChatView } from './components/ChatView';
+import { StatsView } from './components/StatsView';
 import { Loader2 } from 'lucide-react';
 import './App.css';
 
@@ -37,7 +38,11 @@ function App() {
         selectedId={selectedId}
         onSelect={setSelectedId}
       />
-      <ChatView conversation={selectedConversation} />
+      {selectedConversation ? (
+        <ChatView conversation={selectedConversation} />
+      ) : (
+        <StatsView conversations={conversations} />
+      )}
     </div>
   );
 }

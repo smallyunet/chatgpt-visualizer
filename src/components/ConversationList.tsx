@@ -70,24 +70,24 @@ export const ConversationList: React.FC<ConversationListProps> = ({
     }, [filtered]);
 
     return (
-        <div className="flex flex-col h-full bg-gray-50 border-r border-gray-200 w-[280px] flex-shrink-0">
+        <div className="flex flex-col h-full bg-gray-50/50 border-r border-gray-200/60 w-[300px] flex-shrink-0 backdrop-blur-xl">
             {/* Header / Search */}
-            <div className="p-4 border-b border-gray-200">
+            <div className="p-4 border-b border-gray-200/60">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="font-semibold text-sm text-gray-900 tracking-tight flex items-center gap-2">
-                        <Archive className="w-4 h-4 text-gray-500" />
+                        <Archive className="w-4 h-4 text-indigo-500" />
                         History
                     </h2>
-                    <span className="text-xs text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] font-medium text-gray-500 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
                         {conversations.length}
                     </span>
                 </div>
                 <div className="relative group">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
                     <input
                         type="text"
                         placeholder="Search conversations..."
-                        className="w-full bg-white text-gray-900 pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm transition-all placeholder-gray-400 shadow-sm"
+                        className="w-full bg-white text-gray-900 pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all placeholder-gray-400 shadow-sm/50"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -99,11 +99,11 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                 <Virtuoso
                     style={{ height: '100%' }}
                     data={displayItems}
-                    className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+                    className="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent"
                     itemContent={(_, item) => {
                         if (item.type === 'header') {
                             return (
-                                <div className="px-4 py-2 bg-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wider sticky top-0 z-10 border-y border-gray-200">
+                                <div className="px-4 py-2.5 bg-gray-100/40 backdrop-blur-sm text-[10px] font-bold text-gray-500 uppercase tracking-wider sticky top-0 z-10 border-y border-gray-200/30">
                                     {item.title}
                                 </div>
                             );
@@ -113,19 +113,19 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                         const isSelected = selectedId === conversation.uuid;
 
                         return (
-                            <div className="px-2 py-1">
+                            <div className="px-2 py-0.5">
                                 <button
                                     className={clsx(
-                                        "w-full text-left px-3 py-3 rounded-md text-sm transition-all duration-200 group relative flex items-start gap-3",
+                                        "w-full text-left px-3 py-3 rounded-lg text-sm transition-all duration-200 group relative flex items-start gap-3",
                                         isSelected
-                                            ? "bg-white text-gray-900 border border-gray-200"
-                                            : "border border-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                                            ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
+                                            : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
                                     )}
                                     onClick={() => conversation.uuid && onSelect(conversation.uuid)}
                                 >
                                     <MessageSquare className={clsx(
                                         "w-4 h-4 mt-0.5 flex-shrink-0 transition-colors",
-                                        isSelected ? "text-blue-500" : "text-gray-400 group-hover:text-gray-500"
+                                        isSelected ? "text-indigo-500" : "text-gray-400 group-hover:text-gray-500"
                                     )} />
                                     <div className="min-w-0 flex-1">
                                         <div className={clsx(
