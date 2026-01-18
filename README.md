@@ -21,43 +21,26 @@ A high-performance, privacy-first web application to visualize your ChatGPT hist
 
 ## Usage Guide
 
-### Step 1: Export Your Data from ChatGPT
+### Method 1: Instant Drag & Drop (Recommended)
 
-1. Log in to [ChatGPT](https://chat.openai.com).
-2. Click on your profile icon (bottom left or top right) -> **Settings**.
-3. Go to **Data controls** -> **Export data**.
-4. Click **Confirm export**.
-5. Wait for an email from OpenAI (usually takes a few minutes).
-6. Download the `.zip` file from the email.
-
-### Step 2: Prepare the Data
-
-1. Clone or download this project to your computer.
-2. Navigate to the project directory:
+1. **Export Data**: Go to ChatGPT -> Settings -> Data controls -> Export data.
+2. **Unzip**: Extract the downloaded zip file.
+3. **Run App**:
    ```bash
-   cd chatgpt-visualizer
+   npm install
+   npm run dev
    ```
-3. Create the data directory (if it doesn't exist):
-   ```bash
-   mkdir -p public/data
-   ```
-4. **Extract** the downloaded zip file from ChatGPT.
-5. **Copy** all extracted files (including `conversations.json` and any image files like `file-*.png`) into the `public/data/` folder of this project.
+4. **Drag & Drop**: Open [http://localhost:5173](http://localhost:5173) and drop your `conversations.json` file onto the window.
 
-   Directory structure should look like this:
-   ```
-   chatgpt-visualizer/
-   ├── public/
-   │   ├── data/
-   │   │   ├── conversations.json
-   │   │   ├── file-abc1234.png
-   │   │   └── ...
-   │   └── ...
-   ├── src/
-   └── ...
-   ```
+### Method 2: Legacy (Auto-load)
 
-### Step 3: Run the Application
+To have your data load automatically every time:
+
+1. Create `public/data/` directory.
+2. Copy `conversations.json` and any images (`file-*.png`) into `public/data/`.
+3. Run the app, and it will skip the upload screen.
+
+### Running the Application
 
 1. Install dependencies:
    ```bash

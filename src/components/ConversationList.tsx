@@ -69,6 +69,24 @@ export const ConversationList: React.FC<ConversationListProps> = ({
         return results;
     }, [filtered]);
 
+    // Helper to highlight text
+    const HighlightedText = ({ text, highlight }: { text: string; highlight: string }) => {
+        if (!highlight.trim()) return <>{text}</>;
+
+        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+        return (
+            <>
+                {parts.map((part, i) => (
+                    part.toLowerCase() === highlight.toLowerCase() ? (
+                        <span key={i} className="bg-yellow-200 text-gray-900 rounded-[2px] px-0.5 -mx-0.5">{part}</span>
+                    ) : (
+                        <span key={i}>{part}</span>
+                    )
+                ))}
+            </>
+        );
+    };
+
     return (
         <div className="flex flex-col h-full bg-gray-50/50 border-r border-gray-200/60 w-[300px] flex-shrink-0 backdrop-blur-xl">
             {/* Header / Search */}
@@ -132,7 +150,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                                             "font-medium truncate",
                                             isSelected ? "text-gray-900" : "text-gray-700 group-hover:text-gray-900"
                                         )}>
-                                            {conversation.title || 'Untitled Chat'}
+                                            <HighlightedText text={conversation.title || 'Untitled Chat'} highlight={searchTerm} />
                                         </div>
                                     </div>
                                 </button>

@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { Conversation } from '../types';
 
 interface UseChatDataResult {
     conversations: Conversation[];
     loading: boolean;
     error: string | null;
+    loadFromFile: (file: File) => Promise<void>;
 }
 
 export function useChatData(): UseChatDataResult {
@@ -12,41 +13,61 @@ export function useChatData(): UseChatDataResult {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const processData = useCallback((data: any) => {
+        // Generate UUIDs for conversations that don't have them
+        const dataWithIds = data.map((c: Conversation, index: number) => ({
+            ...c,
+            uuid: crypto.randomUUID ? crypto.randomUUID() : `conv-${index}-${Date.now()}`
+        }));
+        setConversations(dataWithIds);
+        setLoading(false);
+        setError(null);
+    }, []);
+
+    const loadFromFile = useCallback(async (file: File) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            processData(data);
+        } catch (err) {
+            console.error(err);
+            setError(err instanceof Error ? err.message : 'Failed to parse JSON file');
+            setLoading(false);
+        }
+    }, [processData]);
+
     useEffect(() => {
         let mounted = true;
 
-        async function loadData() {
+        async function loadDefaultData() {
             try {
                 const response = await fetch('/data/conversations.json');
                 if (!response.ok) {
-                    throw new Error(`Failed to load data: ${response.statusText}`);
+                    // Start in empty state if no default data found
+                    if (mounted) setLoading(false);
+                    return;
                 }
                 const data = await response.json();
-                // Generate UUIDs for conversations that don't have them (export doesn't have top level ID usually)
-                const dataWithIds = data.map((c: Conversation, index: number) => ({
-                    ...c,
-                    uuid: crypto.randomUUID ? crypto.randomUUID() : `conv-${index}-${Date.now()}`
-                }));
-
                 if (mounted) {
-                    setConversations(dataWithIds);
-                    setLoading(false);
+                    processData(data);
                 }
             } catch (err) {
                 if (mounted) {
-                    console.error(err);
-                    setError(err instanceof Error ? err.message : 'Unknown error');
+                    // If fetch fails (e.g. 404 or network), just stop loading so WelcomeView shows
+                    console.warn("Could not load default data:", err);
                     setLoading(false);
                 }
             }
         }
 
-        loadData();
+        loadDefaultData();
 
         return () => {
             mounted = false;
         };
-    }, []);
+    }, [processData]);
 
-    return { conversations, loading, error };
+    return { conversations, loading, error, loadFromFile };
 }
