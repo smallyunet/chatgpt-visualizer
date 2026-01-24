@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -9,17 +9,29 @@ import 'katex/dist/katex.min.css';
 import clsx from 'clsx';
 import type { Conversation, Message } from '../types';
 import { getThread, formatDate } from '../utils/chatUtils';
-import { User, Sparkles, Clock, Calendar } from 'lucide-react';
+import { User, Sparkles, Clock, Calendar, Search, X } from 'lucide-react';
 
 interface ChatViewProps {
     conversation: Conversation | null;
 }
 
 export const ChatView: React.FC<ChatViewProps> = ({ conversation }) => {
+    const [messageQuery, setMessageQuery] = useState('');
+
+    useEffect(() => {
+        setMessageQuery('');
+    }, [conversation?.uuid]);
+
     const messages = useMemo(() => {
         if (!conversation) return [];
         return getThread(conversation);
     }, [conversation]);
+
+    const filteredMessages = useMemo(() => {
+        const q = messageQuery.trim().toLowerCase();
+        if (!q) return messages;
+        return messages.filter((m) => getMessagePlainText(m).toLowerCase().includes(q));
+    }, [messages, messageQuery]);
 
     if (!conversation) {
         return (
@@ -57,8 +69,31 @@ export const ChatView: React.FC<ChatViewProps> = ({ conversation }) => {
                         </span>
                         <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {messages.length} messages
+                            {filteredMessages.length}{messageQuery.trim() ? ` / ${messages.length}` : ''} messages
                         </span>
+                    </div>
+                </div>
+
+                <div className="hidden md:flex items-center gap-2">
+                    <div className="relative group">
+                        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
+                        <input
+                            type="text"
+                            placeholder="Search in chat..."
+                            className="w-[260px] bg-white text-gray-900 pl-9 pr-9 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-sm transition-all placeholder-gray-400 shadow-sm/50"
+                            value={messageQuery}
+                            onChange={(e) => setMessageQuery(e.target.value)}
+                        />
+                        {messageQuery.trim() && (
+                            <button
+                                type="button"
+                                className="absolute right-2 top-2 p-1 rounded-md text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+                                onClick={() => setMessageQuery('')}
+                                aria-label="Clear message search"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        )}
                     </div>
                 </div>
             </header>
@@ -67,7 +102,7 @@ export const ChatView: React.FC<ChatViewProps> = ({ conversation }) => {
             <div className="flex-1 overflow-hidden relative">
                 <Virtuoso
                     style={{ height: '100%' }}
-                    data={messages}
+                    data={filteredMessages}
                     className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
                     // Increase overscan for smoother scrolling of heavy markdown
                     overscan={500}
@@ -80,6 +115,18 @@ export const ChatView: React.FC<ChatViewProps> = ({ conversation }) => {
         </div>
     );
 };
+
+function getMessagePlainText(message: Message): string {
+    const parts = message.content.parts;
+    if (!Array.isArray(parts)) return '';
+    return parts
+        .map((p) => {
+            if (typeof p === 'string') return p;
+            if (p && typeof p === 'object' && typeof (p as any).text === 'string') return (p as any).text;
+            return '';
+        })
+        .join('');
+}
 
 const MessageItem: React.FC<{ message: Message }> = ({ message }) => {
     const isUser = message.author.role === 'user';

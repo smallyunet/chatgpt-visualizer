@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Conversation } from '../types';
+import { getConversationStableId } from '../utils/chatUtils';
 
 interface UseChatDataResult {
     conversations: Conversation[];
@@ -14,11 +15,20 @@ export function useChatData(): UseChatDataResult {
     const [error, setError] = useState<string | null>(null);
 
     const processData = useCallback((data: any) => {
-        // Generate UUIDs for conversations that don't have them
-        const dataWithIds = data.map((c: Conversation, index: number) => ({
-            ...c,
-            uuid: crypto.randomUUID ? crypto.randomUUID() : `conv-${index}-${Date.now()}`
-        }));
+        if (!Array.isArray(data)) {
+            throw new Error('Invalid data: expected an array of conversations');
+        }
+
+        // Prefer stable IDs from the export (id/conversation_id). Only synthesize if missing.
+        const dataWithIds = data.map((c: Conversation, index: number) => {
+            const stableId = getConversationStableId(c);
+            const fallback = crypto.randomUUID ? crypto.randomUUID() : `conv-${index}-${Date.now()}`;
+            return {
+                ...c,
+                uuid: stableId || fallback,
+            };
+        });
+
         setConversations(dataWithIds);
         setLoading(false);
         setError(null);

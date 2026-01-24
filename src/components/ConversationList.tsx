@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import type { Conversation } from '../types';
-import { MessageSquare, Search, Archive } from 'lucide-react';
+import { MessageSquare, Search, Archive, BarChart3 } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ConversationListProps {
     conversations: Conversation[];
     selectedId: string | null;
-    onSelect: (id: string) => void;
+    onSelect: (id: string | null) => void;
 }
 
 type ListItem =
@@ -100,6 +100,23 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                         {conversations.length}
                     </span>
                 </div>
+
+                <button
+                    className={clsx(
+                        "w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all duration-200 group relative flex items-center gap-3 mb-3",
+                        selectedId === null
+                            ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
+                            : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+                    )}
+                    onClick={() => onSelect(null)}
+                >
+                    <BarChart3 className={clsx(
+                        "w-4 h-4 flex-shrink-0 transition-colors",
+                        selectedId === null ? "text-indigo-500" : "text-gray-400 group-hover:text-gray-500"
+                    )} />
+                    <span className="font-medium truncate">Dashboard</span>
+                </button>
+
                 <div className="relative group">
                     <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
                     <input
@@ -139,7 +156,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
                                             ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
                                             : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
                                     )}
-                                    onClick={() => conversation.uuid && onSelect(conversation.uuid)}
+                                    onClick={() => onSelect(conversation.uuid ?? null)}
                                 >
                                     <MessageSquare className={clsx(
                                         "w-4 h-4 mt-0.5 flex-shrink-0 transition-colors",

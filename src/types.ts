@@ -39,6 +39,8 @@ export interface Node {
 
 export interface Conversation {
     uuid?: string; // Synthetic ID for UI
+    id?: string; // Stable conversation id from export
+    conversation_id?: string; // Some exports duplicate id here
     title: string;
     create_time: number;
     update_time: number;

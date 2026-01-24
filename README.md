@@ -14,6 +14,15 @@ A high-performance, privacy-first web application to visualize your ChatGPT hist
 - **Image Attachments**: Automatically displays images included in your export.
 - **Instant Search**: Virtualized list allows instant filtering even with thousands of conversations.
 
+## Changelog
+
+### v0.0.4
+
+- Deep-linking via URL query param `?c=<conversationId>` to open a specific conversation.
+- Stable conversation IDs (prefers export `id`/`conversation_id` when available).
+- Dashboard button in the left sidebar to quickly return to Stats.
+- In-chat message search (filters the current thread).
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or higher)

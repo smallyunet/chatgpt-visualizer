@@ -4,17 +4,23 @@ export function getThread(conversation: Conversation, leafId?: string | null): M
     const { mapping } = conversation;
     let currentNodeId = leafId || conversation.current_node;
 
-    // If no current node is specified, find the last leaf node created? 
-    // Actually usually current_node is present. If not, just pick one leaf.
+    // Fallback: some exports omit current_node.
+    // In that case, pick the latest leaf node (no children) that has a message.
     if (!currentNodeId) {
-        // simple fallback: find a node with no children? or just return empty
-        // Ideally the export has current_node.
-        // If we can't find it, we might just return empty or try to find a leaf.
-        const keys = Object.keys(mapping);
-        if (keys.length === 0) return [];
-        // Just pick the last one added? No, that's unsafe. 
-        // Let's assume current_node works for MVP.
-        return [];
+        const nodes = Object.values(mapping);
+        const leafCandidates = nodes
+            .filter((n) => (n.children?.length ?? 0) === 0)
+            .filter((n) => n.message);
+
+        if (leafCandidates.length === 0) return [];
+
+        leafCandidates.sort((a, b) => {
+            const ta = a.message?.create_time ?? 0;
+            const tb = b.message?.create_time ?? 0;
+            return tb - ta;
+        });
+
+        currentNodeId = leafCandidates[0].id;
     }
 
     const thread: Message[] = [];
@@ -48,4 +54,8 @@ export function truncate(str: string, length: number): string {
 
 export function formatDate(timestamp: number): string {
     return new Date(timestamp * 1000).toLocaleDateString();
+}
+
+export function getConversationStableId(conversation: Conversation): string | undefined {
+    return conversation.id || conversation.conversation_id || conversation.uuid;
 }

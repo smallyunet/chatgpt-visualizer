@@ -13,12 +13,16 @@ export const StatsView: React.FC<StatsViewProps> = ({ conversations }) => {
         let totalMessages = 0;
         let totalUserMessages = 0;
         let totalModelMessages = 0;
+        let firstChatTime = Number.POSITIVE_INFINITY;
         const messagesByDate: Record<string, number> = {};
         const messagesByMonth: Record<string, number> = {};
         const botUsage: Record<string, number> = {};
 
         // Process all conversations
         conversations.forEach(conv => {
+            if (typeof conv.create_time === 'number') {
+                firstChatTime = Math.min(firstChatTime, conv.create_time);
+            }
             const msgs = getThread(conv);
             totalMessages += msgs.length;
 
@@ -64,7 +68,8 @@ export const StatsView: React.FC<StatsViewProps> = ({ conversations }) => {
             totalModelMessages,
             monthlyActivity,
             conversationTypes,
-            avgMessagesPerConv: conversations.length > 0 ? Math.round(totalMessages / conversations.length) : 0
+            avgMessagesPerConv: conversations.length > 0 ? Math.round(totalMessages / conversations.length) : 0,
+            firstChatTime: Number.isFinite(firstChatTime) ? firstChatTime : null,
         };
     }, [conversations]);
 
@@ -99,7 +104,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ conversations }) => {
                     />
                     <StatCard
                         title="First Chat"
-                        value={formatDate(conversations[conversations.length - 1]?.create_time).split(',')[0]}
+                        value={stats.firstChatTime ? formatDate(stats.firstChatTime).split(',')[0] : '—'}
                         icon={<Calendar className="w-5 h-5 text-blue-500" />}
                     />
                 </div>
